@@ -1,26 +1,14 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import User from '../model/User';
 
-import { UserData } from '../typings/user.types';
-import users from '../model/users.json';
-
-dotenv.config();
-
-const usersDB: UserData = {
-	users,
-	setUsers(data) {
-		this.users = data;
-	},
-};
-
-export const handleRefreshToken = (req: Request, res: Response) => {
+export const handleRefreshToken = async (req: Request, res: Response) => {
 	const cookies = req.cookies;
 
 	if (!cookies?.jwt) return res.sendStatus(401);
 
 	const refreshToken = cookies.jwt;
-	const foundUser = usersDB.users.find((person) => person?.refreshToken === refreshToken);
+	const foundUser = await User.findOne({ refreshToken }).exec();
 
 	if (!foundUser) return res.sendStatus(403);
 

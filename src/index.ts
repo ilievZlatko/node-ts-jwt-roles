@@ -1,9 +1,12 @@
-import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import mongoose from 'mongoose';
 
 // Config imports
 import corsOptions from './config/corsOptions';
+import connectDB from './config/dbConn';
 
 // Middleware imports
 import { logger } from './middleware/logEvents';
@@ -19,8 +22,13 @@ import rootRoute from './routes/api/root';
 import refreshRoute from './routes/api/refresh';
 import logoutRoute from './routes/api/logout';
 
+dotenv.config();
+
+// connect to DB
+connectDB();
+
 // Config
-const app = express();
+const app: Application = express();
 const PORT = process.env.PORT || 4000;
 
 // Middleware
@@ -52,4 +60,7 @@ app.all('*', (_: Request, res: Response) => {
 app.use(errorHandler);
 
 // Server starting
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+mongoose.connection.once('open', () => {
+	console.log('Connected to MongoDB');
+	app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+});

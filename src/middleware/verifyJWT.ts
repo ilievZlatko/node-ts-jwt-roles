@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { IToken } from '../types/token.type';
 
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
 	const authHeader = req.headers.authorization || String(req.headers.Authorization);
@@ -13,10 +11,12 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
 
 	const token = authHeader.split(' ')[1];
 
-	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err, decoded: any) => {
+	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err, decoded) => {
 		if (err) return res.status(403).json({ message: err.message });
-		req.username = decoded.userInfo.username;
-		req.roles = decoded.userInfo.roles;
+		/* @ts-ignore */
+		req.username = (decoded as IToken).userInfo.username;
+		/* @ts-ignore */
+		req.roles = (decoded as IToken).userInfo.roles;
 		next();
 	});
 };

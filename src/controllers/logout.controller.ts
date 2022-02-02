@@ -1,16 +1,5 @@
 import { Request, Response } from 'express';
-import { promises } from 'fs';
-import path from 'path';
-
-import { UserData } from '../typings/user.types';
-import users from '../model/users.json';
-
-const usersDB: UserData = {
-	users,
-	setUsers(data) {
-		this.users = data;
-	},
-};
+import User from '../model/User';
 
 export const handleLogout = async (req: Request, res: Response) => {
 	// On client also delete the accessToken
@@ -18,7 +7,7 @@ export const handleLogout = async (req: Request, res: Response) => {
 	if (!cookies?.jwt) return res.sendStatus(204);
 
 	const refreshToken = cookies.jwt;
-	const foundUser = usersDB.users.find((person) => person?.refreshToken === refreshToken);
+	const foundUser = await User.findOne({ refreshToken }).exec();
 
 	if (!foundUser) {
 		res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
@@ -26,10 +15,9 @@ export const handleLogout = async (req: Request, res: Response) => {
 	}
 
 	// Delete the refreshToken
-	const otherUsers = usersDB.users.filter((person) => person.refreshToken !== foundUser.refreshToken);
-	const currentUser = { ...foundUser, refreshToken: '' };
-	usersDB.setUsers([...otherUsers, currentUser]);
-	await promises.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(usersDB.users));
+	foundUser.refreshToken = '';
+	const result = await foundUser.save();
+	console.log(result);
 
 	res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
 	res.sendStatus(204);
