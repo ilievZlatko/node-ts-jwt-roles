@@ -12,7 +12,7 @@ export const handleLogin = async (req: Request, res: Response) => {
 
 	const match = await bcrypt.compare(password, foundUser.password);
 	if (match) {
-		const roles = Object.values(foundUser.roles);
+		const roles = Object.values(foundUser.roles).filter(Boolean);
 
 		const accessToken = jwt.sign(
 			{
@@ -34,7 +34,7 @@ export const handleLogin = async (req: Request, res: Response) => {
 		console.log(result);
 
 		res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 });
-		res.status(200).json({ accessToken });
+		res.status(200).json({ accessToken, roles });
 	} else {
 		res.status(401).json({ message: 'Invalid username or password' });
 	}
