@@ -28,6 +28,6 @@ export const handleRefreshToken = async (
 			process.env.ACCESS_TOKEN_SECRET!,
 			{ expiresIn: '5m' },
 		);
-		res.json({ accessToken });
+		res.json({ roles, accessToken });
 	});
 };
