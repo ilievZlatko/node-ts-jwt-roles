@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import User from '../model/User';
 
-export const handleLogout = async (req: Request, res: Response) => {
+export const handleLogout = async (
+	req: Request,
+	res: Response,
+): Promise<Response<any, Record<string, any>> | undefined> => {
 	// On client also delete the accessToken
 	const cookies = req.cookies;
 	if (!cookies?.jwt) return res.sendStatus(204);

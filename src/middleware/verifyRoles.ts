@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
-const verifyRoles = (...allowedRoles: Array<number | undefined>) => {
+type VerifyRoles = (
+	...allowedRoles: Array<number | undefined>
+) => (req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined;
+
+const verifyRoles: VerifyRoles = (...allowedRoles: Array<number | undefined>) => {
 	return (req: Request, res: Response, next: NextFunction) => {
 		/* @ts-ignore */
 		if (!req?.roles) return res.sendStatus(401);

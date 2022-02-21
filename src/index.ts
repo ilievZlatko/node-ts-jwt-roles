@@ -16,11 +16,12 @@ import credentials from './middleware/credentials';
 
 // Routes imports
 import employeesRoute from './routes/api/employees';
-import registerRoute from './routes/api/register';
-import authRoute from './routes/api/auth';
-import rootRoute from './routes/api/root';
-import refreshRoute from './routes/api/refresh';
-import logoutRoute from './routes/api/logout';
+import usersRoute from './routes/api/users';
+import registerRoute from './routes/register';
+import authRoute from './routes/auth';
+import rootRoute from './routes/root';
+import refreshRoute from './routes/refresh';
+import logoutRoute from './routes/logout';
 
 dotenv.config();
 
@@ -49,6 +50,7 @@ app.use('/logout', logoutRoute);
 // Protected routes with JWT
 app.use(verifyJWT);
 app.use('/employees', employeesRoute);
+app.use('/users', usersRoute);
 
 // Error handling
 app.all('*', (_: Request, res: Response) => {

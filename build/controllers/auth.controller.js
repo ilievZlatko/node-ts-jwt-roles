@@ -25,7 +25,7 @@ const handleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         return res.sendStatus(401);
     const match = yield bcrypt_1.default.compare(password, foundUser.password);
     if (match) {
-        const roles = Object.values(foundUser.roles);
+        const roles = Object.values(foundUser.roles).filter(Boolean);
         const accessToken = jsonwebtoken_1.default.sign({
             userInfo: {
                 username: foundUser.username,
@@ -39,7 +39,7 @@ const handleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const result = yield foundUser.save();
         console.log(result);
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 });
-        res.status(200).json({ accessToken });
+        res.status(200).json({ accessToken, roles });
     }
     else {
         res.status(401).json({ message: 'Invalid username or password' });

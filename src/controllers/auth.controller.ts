@@ -3,7 +3,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../model/User';
 
-export const handleLogin = async (req: Request, res: Response) => {
+export const handleLogin = async (
+	req: Request,
+	res: Response,
+): Promise<Response<any, Record<string, any>> | undefined> => {
 	const { username, password } = req.body;
 	if (!username || !password) return res.status(400).json({ message: 'Username and password are required.' });
 

@@ -2,7 +2,10 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../model/User';
 
-export const handleRefreshToken = async (req: Request, res: Response) => {
+export const handleRefreshToken = async (
+	req: Request,
+	res: Response,
+): Promise<Response<any, Record<string, any>> | undefined> => {
 	const cookies = req.cookies;
 
 	if (!cookies?.jwt) return res.sendStatus(401);

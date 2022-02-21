@@ -18,11 +18,11 @@ const verifyJWT_1 = __importDefault(require("./middleware/verifyJWT"));
 const credentials_1 = __importDefault(require("./middleware/credentials"));
 // Routes imports
 const employees_1 = __importDefault(require("./routes/api/employees"));
-const register_1 = __importDefault(require("./routes/api/register"));
-const auth_1 = __importDefault(require("./routes/api/auth"));
-const root_1 = __importDefault(require("./routes/api/root"));
-const refresh_1 = __importDefault(require("./routes/api/refresh"));
-const logout_1 = __importDefault(require("./routes/api/logout"));
+const register_1 = __importDefault(require("./routes/register"));
+const auth_1 = __importDefault(require("./routes/auth"));
+const root_1 = __importDefault(require("./routes/root"));
+const refresh_1 = __importDefault(require("./routes/refresh"));
+const logout_1 = __importDefault(require("./routes/logout"));
 dotenv_1.default.config();
 // connect to DB
 (0, dbConn_1.default)();

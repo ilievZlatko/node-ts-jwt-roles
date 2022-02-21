@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { IToken } from '../types/token.type';
 
-const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
+const verifyJWT = (req: Request, res: Response, next: NextFunction): Response<any, Record<string, any>> | undefined => {
 	const authHeader = req.headers.authorization || String(req.headers.Authorization);
 
 	if (!authHeader?.startsWith('Bearer ')) {
